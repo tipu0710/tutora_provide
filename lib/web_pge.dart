@@ -23,11 +23,13 @@ class WebWidget extends StatefulWidget {
 class _WebWidget extends State<WebWidget> {
   final flutterWebviewPlugin = new FlutterWebviewPlugin();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  StreamSubscription<WebViewStateChanged> _onStateChanged;
+  bool isLoadFirstTime = true;
   bool isInternet = true;
+
   @override
   void initState() {
     super.initState();
-    checkInternet();
     _connectivitySubscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       checkInternetStatus(result);
     });
@@ -43,10 +45,27 @@ class _WebWidget extends State<WebWidget> {
     flutterWebviewPlugin.onHttpError.listen((_) {
       print("Error");
     });
+
+    _onStateChanged =
+        flutterWebviewPlugin.onStateChanged.listen((WebViewStateChanged state) {
+          print(state.type.toString());
+          if (mounted && isLoadFirstTime) {
+            if(widget.url == "https://tutorprovide.com/jobboard"){
+              if(state.type.toString()=="WebViewState.finishLoad"){
+                flutterWebviewPlugin.reloadUrl(widget.url);
+                setState(() {
+                  isLoadFirstTime = false;
+                });
+              }
+            }
+
+          }
+        });
   }
 
   @override
   void dispose() {
+    _onStateChanged.cancel();
     _connectivitySubscription.cancel();
     flutterWebviewPlugin.dispose();
     super.dispose();
@@ -58,6 +77,8 @@ class _WebWidget extends State<WebWidget> {
       url: widget.url,
       withJavascript: true,
       withZoom: false,
+      useWideViewPort: true,
+      clearCache: false,
       allowFileURLs: true,
       hidden: true,
       scrollBar: false,
@@ -88,23 +109,6 @@ class _WebWidget extends State<WebWidget> {
     );
   }
 
-  void checkInternet() async{
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile) {
-      setState(() {
-        isInternet = true;
-      });
-    } else if (connectivityResult == ConnectivityResult.wifi) {
-      setState(() {
-        isInternet = true;
-      });
-    } else{
-      setState(() {
-        isInternet = false;
-      });
-    }
-  }
-
   void checkInternetStatus(ConnectivityResult result) {
     switch (result) {
       case ConnectivityResult.wifi:
@@ -120,6 +124,7 @@ class _WebWidget extends State<WebWidget> {
       case ConnectivityResult.none:
         setState(() {
           isInternet = false;
+          isLoadFirstTime = true;
         });
         break;
       default:

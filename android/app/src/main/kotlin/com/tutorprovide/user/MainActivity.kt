@@ -1,4 +1,4 @@
-package user.tutorprovide.com.tutora_provide
+package com.tutorprovide.user
 
 import android.os.Bundle
 

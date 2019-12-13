@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tutora_provide/home_page.dart';
 import 'package:tutora_provide/splash_screen/splashScreen.dart';
-import 'package:tutora_provide/web_pge.dart';
 
 void main() => runApp(MyApp());
 
