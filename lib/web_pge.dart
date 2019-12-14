@@ -50,7 +50,7 @@ class _WebWidget extends State<WebWidget> {
         flutterWebviewPlugin.onStateChanged.listen((WebViewStateChanged state) {
           print(state.type.toString());
           if (mounted && isLoadFirstTime) {
-            if(widget.url == "https://tutorprovide.com/jobboard"){
+            if(widget.url == "https://tutorprovide.com/jobboard" || widget.url == "https://tutorprovide.com/login"){
               if(state.type.toString()=="WebViewState.finishLoad"){
                 flutterWebviewPlugin.reloadUrl(widget.url);
                 setState(() {
