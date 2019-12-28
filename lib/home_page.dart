@@ -5,6 +5,11 @@ import 'package:page_transition/page_transition.dart';
 import 'package:tutora_provide/constant.dart';
 import 'package:tutora_provide/custom_icon/my_flutter_app_icons.dart';
 import 'package:tutora_provide/web_pge.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+
+String msgUrl = "https://m.me/tutorprovide";
+String youtubeUrl = "https://www.youtube.com/watch?v=JHROR1YMxwA";
 
 class HomePage extends StatefulWidget {
   @override
@@ -23,6 +28,7 @@ class _HomePage extends State<HomePage> {
     'assets/5.jpg',
     'assets/6.jpg',
   ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +62,9 @@ class _HomePage extends State<HomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  SizedBox(
+                    height: 100,
+                  ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -117,6 +126,25 @@ class _HomePage extends State<HomePage> {
                         icon: MyIcons.question_circle_o,
                         title: "Why us".toUpperCase(),
                       ),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Category(
+                        youtubeUrl,
+                        backgroundColor: Colors.lime.withOpacity(opacity),
+                        icon: Icons.ondemand_video,
+                        title: "How to\nRegister".toUpperCase(),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Category(msgUrl,
+                          backgroundColor: Colors.limeAccent.withOpacity(opacity),
+                          icon: Icons.message,
+                          title: "Contact".toUpperCase())
                     ],
                   ),
                 ],
@@ -197,15 +225,19 @@ class Category extends StatelessWidget {
     return InkWell(
       onTap: () {
         print("Tap");
-        Navigator.push(
-            context,
-            PageTransition(
-                child: WebWidget(
-                  url: url,
-                ),
-                type: PageTransitionType.scale,
-                alignment: Alignment.center,
-                duration: Duration(seconds: 1)));
+        if (url == youtubeUrl || url == msgUrl) {
+          launchYoutube(url);
+        } else {
+          Navigator.push(
+              context,
+              PageTransition(
+                  child: WebWidget(
+                    url: url,
+                  ),
+                  type: PageTransitionType.scale,
+                  alignment: Alignment.center,
+                  duration: Duration(seconds: 1)));
+        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -232,5 +264,9 @@ class Category extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  launchYoutube(String url) async {
+    await launch(url);
   }
 }

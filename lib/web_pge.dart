@@ -50,15 +50,12 @@ class _WebWidget extends State<WebWidget> {
         flutterWebviewPlugin.onStateChanged.listen((WebViewStateChanged state) {
           print(state.type.toString());
           if (mounted && isLoadFirstTime) {
-            if(widget.url == "https://tutorprovide.com/jobboard" || widget.url == "https://tutorprovide.com/login"){
               if(state.type.toString()=="WebViewState.finishLoad"){
                 flutterWebviewPlugin.reloadUrl(widget.url);
                 setState(() {
                   isLoadFirstTime = false;
                 });
               }
-            }
-
           }
         });
   }
@@ -74,11 +71,14 @@ class _WebWidget extends State<WebWidget> {
   @override
   Widget build(BuildContext context) {
     return isInternet? WebviewScaffold(
-      url: widget.url,
+      url: "https://tutorprovide.com/",
       withJavascript: true,
       withZoom: false,
       useWideViewPort: true,
       clearCache: false,
+      clearCookies: false,
+      appCacheEnabled: true,
+      withLocalStorage: true,
       allowFileURLs: true,
       hidden: true,
       scrollBar: false,
